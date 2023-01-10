@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  database:
+    image: mongo:3.4.18
+    container_name: typeorm-mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGODB_DATABASE=test
+    ports:
+      - 27017:27017
+    volumes:
+      - ./db:/data/db
+
+  client:
+    image: client:latest
+    container_name: frontend
+    ports:
+      - 3000:3000
+    links:
+      - serverapi
+    depends_on:
+      - serverapi
+
+  serverapi:
+    image: serverapi:latest
+    container_name: backend
+    ports:
+      - "3333-3333"
+    links:
+      - database
+    depends_on:
+      - database
