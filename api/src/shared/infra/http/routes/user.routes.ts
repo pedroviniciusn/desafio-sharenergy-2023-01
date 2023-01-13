@@ -2,7 +2,10 @@ import { Router } from 'express';
 
 const userRoutes = Router();
 
-userRoutes.get("/", );
-userRoutes.post("/session", );
+userRoutes.get("/", (req, res) => {
+  res.json({
+    message: "Hello World"
+  })
+});
 
 export { userRoutes };

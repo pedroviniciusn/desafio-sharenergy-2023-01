@@ -15,11 +15,20 @@ export class UserRepository implements IUserRepository {
       _id: id 
     });
   }
-
+  
+  async findByUsername(username: string): Promise<IUser> {
+    return await this.repository.findOne({
+      _username: username
+    });
+  }
+  
   async findByEmail(email: string): Promise<IUser> {
     return await this.repository.findOne({
       _email: email
-    })
+    });
   }
 
+  async listAllUsers(): Promise<IUser> {
+    throw new Error('Method not implemented.');
+  }
 }

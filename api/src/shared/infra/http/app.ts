@@ -1,8 +1,9 @@
+import "reflect-metadata";
+
 import express, {
   NextFunction,
   Request,
   Response,
-  Router,
 } from "express";
 
 import { connect } from '../mongodb';
@@ -13,9 +14,9 @@ import dotenv from "dotenv";
 
 import "../../container";
 
-import { User } from '../mongodb/seed/admin';
-
 import { createAdmin } from '../mongodb/seed/admin';
+
+import { router } from './routes';
 
 import { AppError } from '../../errors/AppError';
 
@@ -27,19 +28,9 @@ const app = express();
 
 app.use(express.json());
 
-// app.get("/", async (req, res) => {
-//   const adminExists = await User.findOne({
-//     _email: 
-//   })
+app.use(router);
 
-//   if(!adminExists) {
-//     createAdmin()
-//   }
-
-//   const user = await User.find();
-
-//   return res.json(user);
-// })
+createAdmin();
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof AppError) {
@@ -54,4 +45,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-export { app }
+export { app };
