@@ -4,7 +4,9 @@ import { IUserRepository } from '../../repositories/IUserRepository';
 
 
 export class UserRepository implements IUserRepository {
-  private repository
+  private repository;
+  private users: IUser[] = [];
+  private usersPage: IUser[] = [];
 
   constructor() {
     this.repository = User;
@@ -28,7 +30,27 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async listAllUsers(): Promise<IUser> {
-    throw new Error('Method not implemented.');
+  async listAllUsers(page: string): Promise<IUser[]> {
+    this.usersPage = [];
+  
+    const users = await fetch(`https://randomuser.me/api/?page=${page}&results=10&?seed=foobar&inc=picture,name,email,login,dob`)
+      .then(response => response.json())
+      .then(data => {
+        return data.results
+      });
+
+      for(let i = 0; i < users.length; i++) {
+        const user = <IUser> { 
+          full_name: Object.values(users[i].name).join(" "),
+          email: users[i].email,
+          username: users[i].login.username,
+          age: users[i].dob.age,
+          picture: users[i].picture.medium,
+        }
+        this.usersPage.push(user);
+        this.users.push(user);
+      }
+
+      return this.usersPage;
   }
 }

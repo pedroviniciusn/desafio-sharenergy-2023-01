@@ -4,7 +4,7 @@ export interface IUser {
   email: string;
   password?: string;
   username: string;
-  is_admin: boolean;
+  is_admin?: boolean;
   age: number;
   picture?: string;
 }

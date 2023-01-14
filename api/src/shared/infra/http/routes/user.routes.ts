@@ -1,11 +1,10 @@
 import { Router } from 'express';
+import { ListUsersController } from '../../../../modules/accounts/useCases/listUsers/ListUsersController';
 
 const userRoutes = Router();
 
-userRoutes.get("/", (req, res) => {
-  res.json({
-    message: "Hello World"
-  })
-});
+const listUsersController = new ListUsersController();
+
+userRoutes.get("/:page", listUsersController.handle);
 
 export { userRoutes };

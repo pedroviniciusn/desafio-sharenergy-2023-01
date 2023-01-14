@@ -1,4 +1,3 @@
-import "reflect-metadata";
 
 import express, {
   NextFunction,
@@ -8,11 +7,13 @@ import express, {
 
 import { connect } from '../mongodb';
 
-import 'express-async-errors';
-
 import dotenv from "dotenv";
 
-import "../../container";
+import "reflect-metadata";
+
+import 'express-async-errors';
+
+import "../../container/index"
 
 import { createAdmin } from '../mongodb/seed/admin';
 
