@@ -1,12 +1,11 @@
 import { User } from '../../../../shared/infra/mongodb/seed/admin';
 import { IUser } from '../../dtos/IUser';
 import { IUserRepository } from '../../repositories/IUserRepository';
+import { listAllUsers, listUsersForPage } from '../api/apiUsers';
 
 
 export class UserRepository implements IUserRepository {
   private repository;
-  private users: IUser[] = [];
-  private usersPage: IUser[] = [];
 
   constructor() {
     this.repository = User;
@@ -31,26 +30,26 @@ export class UserRepository implements IUserRepository {
   }
 
   async listAllUsers(page: string): Promise<IUser[]> {
-    this.usersPage = [];
-  
-    const users = await fetch(`https://randomuser.me/api/?page=${page}&results=10&?seed=foobar&inc=picture,name,email,login,dob`)
-      .then(response => response.json())
-      .then(data => {
-        return data.results
-      });
+    const users = await listUsersForPage(page);
 
-      for(let i = 0; i < users.length; i++) {
-        const user = <IUser> { 
-          full_name: Object.values(users[i].name).join(" "),
-          email: users[i].email,
-          username: users[i].login.username,
-          age: users[i].dob.age,
-          picture: users[i].picture.medium,
-        }
-        this.usersPage.push(user);
-        this.users.push(user);
+    return users;
+  }
+
+  async findUser(data: string): Promise<IUser | null> {
+    const users = await listAllUsers();
+
+    const user = users.filter((user) => {
+      if (
+        data.toLowerCase() === user.full_name.toLowerCase() ||
+        data.toLowerCase() === user.email.toLowerCase() || 
+        data.toLowerCase() === user.username.toLowerCase()
+      ) {
+        return user;
       }
 
-      return this.usersPage;
+      return null;
+    })
+ 
+    return user[0];
   }
 }

@@ -1,6 +1,12 @@
-import { autoInjectable, inject, injectable } from 'tsyringe';
-import { UserRepository } from '../../infra/repositories/UserRepository';
-import { IUserRepository } from '../../repositories/IUserRepository';
+import {
+  inject,
+  injectable,
+} from 'tsyringe';
+import { AppError } from '../../../../shared/errors/AppError';
+
+import {
+  IUserRepository,
+} from '../../repositories/IUserRepository';
 
 interface IRequest {
   page: string;
@@ -14,8 +20,11 @@ export class ListUsersUseCase {
   ) {}
 
   async execute({ page }: IRequest) {
-    const users = await this.userRepository.listAllUsers(page);
-
-    return users;
+    if (Number(page) != 0 && Number(page) < 4) {
+      const users = await this.userRepository.listAllUsers(page);
+      return users;
+    } else {
+      throw new AppError("Page not found!")
+    }
   }
 }
