@@ -1,3 +1,4 @@
+import "reflect-metadata";
 
 import express, {
   NextFunction,
@@ -8,8 +9,6 @@ import express, {
 import { connect } from '../mongodb';
 
 import dotenv from "dotenv";
-
-import "reflect-metadata";
 
 import 'express-async-errors';
 

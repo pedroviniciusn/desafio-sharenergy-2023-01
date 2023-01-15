@@ -16,6 +16,7 @@ export class CreateClientUseCase {
     @inject("ClientRepository")
     private clientRepository: IClientRepository,
   ) {}
+  
   async execute({
     name,
     email,
