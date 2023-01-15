@@ -25,6 +25,6 @@ export class UpdateClientController {
       phone_number,
     });
 
-    return res.status(200).json(clientUpdated);
+    return res.status(200).json(clientUpdated)
   }
 }

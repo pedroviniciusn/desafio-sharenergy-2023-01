@@ -26,13 +26,13 @@ export class UpdateClientUseCase {
     cpf,
     phone_number,
   }: IRequest) {
-    const userExists = await this.clientRepository.findById(id);
+    const clientExists = await this.clientRepository.findById(id);
 
-    if (!userExists) {
+    if (!clientExists) {
       throw new AppError("User not found");
     }
 
-    const userUpdated = await this.clientRepository.update({
+    const clientUpdated = await this.clientRepository.update({
       id,
       name,
       email,
@@ -41,6 +41,6 @@ export class UpdateClientUseCase {
       phone_number,
     });
 
-    return userUpdated;
+    return clientUpdated;
   }
 }

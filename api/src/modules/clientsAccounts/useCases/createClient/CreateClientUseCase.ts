@@ -24,9 +24,9 @@ export class CreateClientUseCase {
     cpf,
     phone_number,
   }: IRequest) {
-    const userExists = await this.clientRepository.findByEmail(email);
+    const clientExists = await this.clientRepository.findByEmail(email);
 
-    if (userExists) {
+    if (clientExists) {
       throw new AppError("User already exists!");
     }
 

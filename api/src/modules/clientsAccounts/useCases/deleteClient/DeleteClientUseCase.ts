@@ -18,9 +18,9 @@ export class DeleteClientUseCase {
   }
   
   async execute({ id }: IRequest) {
-    const user = await this.clientRepository.findById(id);
+    const client = await this.clientRepository.findById(id);
 
-    if (!user) {
+    if (!client) {
       throw new AppError("User not found");
     }
 
