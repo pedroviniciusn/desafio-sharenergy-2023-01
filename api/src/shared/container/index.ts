@@ -4,6 +4,8 @@ import { IUserRepository } from '../../modules/accounts/repositories/IUserReposi
 import { UserRepository } from '../../modules/accounts/infra/mongodb/repositories/UserRepository';
 import { ApiUsersRepository } from '../../modules/users/infra/api/repositories/ApiUsersRepository';
 import { IApiUsersRepository } from '../../modules/users/repositories/IApiUsersRepository';
+import { IClientRepository } from '../../modules/ClientsAccounts/repositories/IClientRepository';
+import { ClientRepository } from '../../modules/ClientsAccounts/infra/mongodb/repositories/ClientRepository';
 
 container.registerSingleton<IUserRepository>(
   "UserRepository",
@@ -13,5 +15,10 @@ container.registerSingleton<IUserRepository>(
 container.registerSingleton<IApiUsersRepository>(
   "ApiUsersRepository",
   ApiUsersRepository,
+);
+
+container.registerSingleton<IClientRepository>(
+  "ClientRepository",
+  ClientRepository,
 );
 
