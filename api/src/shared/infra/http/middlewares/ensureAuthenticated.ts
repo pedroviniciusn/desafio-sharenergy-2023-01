@@ -8,7 +8,7 @@ import { verify } from "jsonwebtoken";
 
 import {
   UserRepository,
-} from "../../../../modules/accounts/infra/repositories/UserRepository";
+} from "../../../../modules/accounts/infra/mongodb/repositories/UserRepository";
 
 import {
   AppError,

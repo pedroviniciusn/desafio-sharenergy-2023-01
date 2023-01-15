@@ -3,10 +3,7 @@ import {
   injectable,
 } from 'tsyringe';
 import { AppError } from '../../../../shared/errors/AppError';
-
-import {
-  IUserRepository,
-} from '../../repositories/IUserRepository';
+import { IApiUsersRepository } from '../../repositories/IApiUsersRepository';
 
 interface IRequest {
   page: string;
@@ -15,13 +12,13 @@ interface IRequest {
 @injectable()
 export class ListUsersUseCase {
   constructor(
-    @inject("UserRepository")
-    private userRepository: IUserRepository,
+    @inject("ApiUsersRepository")
+    private apiUsersRepository: IApiUsersRepository,
   ) {}
 
   async execute({ page }: IRequest) {
     if (Number(page) != 0 && Number(page) < 4) {
-      const users = await this.userRepository.listAllUsers(page);
+      const users = await this.apiUsersRepository.listAllUsers(String(page));
       return users;
     } else {
       throw new AppError("Page not found!")

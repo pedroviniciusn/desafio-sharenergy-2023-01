@@ -8,10 +8,10 @@ export class FindUserController {
     const {
       data
     } = req.body;
-
+    
     const findUserUseCase = container.resolve(FindUserUseCase);
 
-    const user = await findUserUseCase.execute(data);
+    const user = await findUserUseCase.execute({ data });
     
     return res.json(user);
   }

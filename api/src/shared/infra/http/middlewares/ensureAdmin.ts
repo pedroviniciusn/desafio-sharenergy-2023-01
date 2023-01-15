@@ -4,7 +4,7 @@ import {
   NextFunction,
 } from 'express';
 
-import { UserRepository } from '../../../../modules/accounts/infra/repositories/UserRepository';
+import { UserRepository } from '../../../../modules/accounts/infra/mongodb/repositories/UserRepository';
 
 import { AppError } from '../../../errors/AppError';
 

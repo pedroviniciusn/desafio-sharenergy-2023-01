@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { FindUserController } from '../../../../modules/accounts/useCases/findUser/FindUserController';
-import { ListUsersController } from '../../../../modules/accounts/useCases/listUsers/ListUsersController';
+import { FindUserController } from '../../../../modules/users/useCases/findUser/FindUserController';
+import { ListUsersController } from '../../../../modules/users/useCases/listUsers/ListUsersController';
 
 const userRoutes = Router();
 

@@ -23,11 +23,12 @@ import { AppError } from '../../errors/AppError';
 
 dotenv.config();
 
-connect();
 
 const app = express();
 
 app.use(express.json());
+
+connect();
 
 app.use(router);
 
