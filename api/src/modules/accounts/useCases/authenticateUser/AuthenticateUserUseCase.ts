@@ -52,7 +52,7 @@ export class AuthenticateUserUseCase {
     }
 
     const passwordMatch = await compare(password, user.password);
-    console.log(passwordMatch)
+
     if (!passwordMatch) {
       throw new AppError("Email or password incorrect", 401);
     }
