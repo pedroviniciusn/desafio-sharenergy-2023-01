@@ -6,7 +6,7 @@ import { IClientRepository } from '../IClientRepository';
 
 
 export class InMemoryClientRepository implements IClientRepository {
-  client: IClientDTO[] = [];
+  clients: IClientDTO[] = [];
 
   async create({
     name,
@@ -27,7 +27,7 @@ export class InMemoryClientRepository implements IClientRepository {
       id,
     });
 
-    this.client.push(client);
+    this.clients.push(client);
   }
 
   async update({
@@ -38,38 +38,36 @@ export class InMemoryClientRepository implements IClientRepository {
     phone_number,
     id,
   }: IUpdateClientDTO): Promise<IClientDTO> {
-    const client =  this.client.find(client => client.id === id);
+    const client =  this.clients.find(client => client.id === id);
 
-    Object.assign(client, {
-      name,
-      email,
-      address,
-      cpf,
-      phone_number,
-    });
+    client.name = name ? name : client.name;
+    client.email = email ? email : client.email;
+    client.address = address ? address : client.address;
+    client.cpf = cpf ? cpf : client.cpf;
+    client.phone_number = phone_number ? phone_number : client.phone_number;
 
-    this.client.push(client);
+    this.clients.push(client);
 
     return client;
   }
 
   async findById(id: string): Promise<IClientDTO> {
-    return this.client.find(client => client.id === id);
+    return this.clients.find(client => client.id === id);
   }
 
   async findByEmail(email: string): Promise<IClientDTO> {
-    return this.client.find(client => client.email === email);
+    return this.clients.find(client => client.email === email);
   }
 
   async findByName(name: string): Promise<IClientDTO> {
-    return this.client.find(client => client.name === name);
+    return this.clients.find(client => client.name === name);
   }
 
   async delete(id: string): Promise<void> {
-    const clientIndex = this.client.findIndex(client => client.id === id);
+    const clientIndex = this.clients.findIndex(client => client.id === id);
 
     if (clientIndex > -1) {
-      this.client.splice(clientIndex);
+      this.clients.splice(clientIndex);
     }
   }
 

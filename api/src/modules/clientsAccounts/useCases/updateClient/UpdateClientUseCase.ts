@@ -1,4 +1,5 @@
-import { autoInjectable, inject, injectable } from 'tsyringe';
+import "reflect-metadata";
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '../../../../shared/errors/AppError';
 import { IClientRepository } from '../../repositories/IClientRepository';
 
