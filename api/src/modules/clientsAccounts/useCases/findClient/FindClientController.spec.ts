@@ -2,15 +2,14 @@ import { app } from '@shared/infra/http/app';
 import { connect } from '@shared/infra/mongodb';
 import { Connection } from 'mongoose';
 import { createAdmin } from '@shared/infra/mongodb/seed/admin';
-import request from "supertest";
 import { IClientRepository } from '@modules/clientsAccounts/repositories/IClientRepository';
 import { ClientRepository } from '@modules/clientsAccounts/infra/mongodb/repositories/ClientRepository';
+import request from "supertest";
 
 let connection: Connection;
 let clientRepository: IClientRepository;
 
-
-describe("Delete Client Controller", () => {
+describe("Find Client Controller", () => {
   beforeAll(async () => {
     connection = await connect();
     await createAdmin();
@@ -22,16 +21,16 @@ describe("Delete Client Controller", () => {
     await connection.close();
   });
 
-  it("Should be able to delete client", async () => {
+  it("Should be able to find client", async () => {
     await clientRepository.create({
-      name: "test",
-      email: "testandodb@delete.com",
+      name: "test find",
+      email: "testandodb@find.com",
       address: "testando 123",
-      cpf: 45646879,
+      cpf: 4646445321,
       phone_number: 12457878
     });
 
-    const client = await clientRepository.findByEmail("testandodb@delete.com");
+    const client = await clientRepository.findByEmail("testandodb@find.com");
 
     const responseToken = await request(app).post("/session").send({
       username: process.env.ADMIN_USERNAME,
@@ -40,30 +39,16 @@ describe("Delete Client Controller", () => {
 
     const { token } = responseToken.body;
 
-    const response = await request(app).delete(`/clients/${client.id}`).set({
+    const response = await request(app).get(`/clients/${client.name}`).set({
       Authorization: `Bearer ${token}`,
     });
 
     expect(response.status).toEqual(200);
 
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        message: "Success",
-      })
-    );
+    expect(response.body.email).toEqual(client.email);
   });
 
-  it("Should not be able to delete client if admin not authenticated", async () => {
-    const response = await request(app).delete(`/clients/63c5d7749adf42f828ef534b`);
-    
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        message: "token missing",
-      })
-    );
-  });
-
-  it("Should not be able to delete client an nonexistent", async () => {
+  it("Should not be able to find client an nonexistent", async () => {
     const responseToken = await request(app).post("/session").send({
       username: process.env.ADMIN_USERNAME,
       password: process.env.ADMIN_PASSWORD,
@@ -71,13 +56,23 @@ describe("Delete Client Controller", () => {
 
     const { token } = responseToken.body;
 
-    const response = await request(app).delete("/clients/63c5d7749adf42f828ef534b").set({
+    const response = await request(app).get("/clients/clienterror").set({
       Authorization: `Bearer ${token}`,
     });
 
     expect(response.body).toEqual(
       expect.objectContaining({
         message: "Client not found",
+      })
+    );
+  });
+
+  it("Should not be able to find client if admin not authenticated", async () => {
+    const response = await request(app).get(`/clients/usererror`);
+    
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "token missing",
       })
     );
   });

@@ -45,6 +45,6 @@ describe("Update Client", () => {
         id: "anfonafnlkfnafl",
         name: "Error"
       })
-    ).rejects.toEqual(new AppError("User not found"));
+    ).rejects.toEqual(new AppError("Client not found"));
   });
 });

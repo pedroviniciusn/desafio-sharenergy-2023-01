@@ -30,7 +30,7 @@ export class UpdateClientUseCase {
     const clientExists = await this.clientRepository.findById(id);
 
     if (!clientExists) {
-      throw new AppError("User not found");
+      throw new AppError("Client not found");
     }
 
     const clientUpdated = await this.clientRepository.update({

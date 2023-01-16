@@ -46,6 +46,6 @@ describe("Find Client", () => {
   it("Should not be able to find an nonexistent client", async () => {
     await expect(
       findClientUseCase.execute({ name: "Client Error"})
-    ).rejects.toEqual(new AppError("Client does not exists"));
+    ).rejects.toEqual(new AppError("Client not found"));
   });
 });

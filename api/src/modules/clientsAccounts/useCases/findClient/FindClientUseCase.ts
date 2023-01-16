@@ -18,7 +18,7 @@ export class FindClientUseCase {
     const client = await this.clientRepository.findByName(name);
 
     if (!client) {
-      throw new AppError("Client does not exists")
+      throw new AppError("Client not found")
     }
 
     return client;

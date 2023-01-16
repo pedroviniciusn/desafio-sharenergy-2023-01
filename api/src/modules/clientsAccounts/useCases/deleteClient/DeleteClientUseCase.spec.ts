@@ -41,6 +41,6 @@ describe("Delete Client", () => {
   it("Should not be able to delete an nonexistent client", async () => {
     await expect(
       deleteClientUseCase.execute({ id: "asdnhuoajdioa"})
-    ).rejects.toEqual(new AppError("User not found"));
+    ).rejects.toEqual(new AppError("Client not found"));
   });
 });
