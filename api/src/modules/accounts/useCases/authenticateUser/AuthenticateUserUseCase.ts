@@ -20,6 +20,7 @@ import {
 import {
   IUserRepository,
 } from '../../repositories/IUserRepository';
+import { type } from 'os';
 
 interface IRequest {
   username: string;

@@ -8,7 +8,7 @@ import express, {
 
 import { connect } from '../mongodb';
 
-import dotenv from "dotenv";
+import 'dotenv/config';
 
 import 'express-async-errors';
 
@@ -20,18 +20,18 @@ import { router } from './routes';
 
 import { AppError } from '../../errors/AppError';
 
-dotenv.config();
-
-
 const app = express();
 
 app.use(express.json());
-
-connect();
-
 app.use(router);
 
-createAdmin();
+try {
+  connect();
+
+  createAdmin();
+} catch (error) {
+  console.error(error)
+}
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof AppError) {
