@@ -4,7 +4,6 @@ import { Connection } from 'mongoose';
 import { createAdmin } from '@shared/infra/mongodb/seed/admin';
 import request from "supertest";
 
-
 let connection: Connection;
 
 describe("Create Client Controller", () => {

@@ -19,7 +19,7 @@ export class DeleteClientUseCase {
     const client = await this.clientRepository.findById(id);
 
     if (!client) {
-      throw new AppError("User not found");
+      throw new AppError("Client not found");
     }
 
     await this.clientRepository.delete(id);
