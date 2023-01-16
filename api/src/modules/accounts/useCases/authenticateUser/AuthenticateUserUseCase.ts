@@ -59,7 +59,7 @@ export class AuthenticateUserUseCase {
 
     const token = sign({}, "56ebb4604b372d83bb869862c65c9fbd", {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: '30m',
     });
 
     const tokenReturn: IResponse = {

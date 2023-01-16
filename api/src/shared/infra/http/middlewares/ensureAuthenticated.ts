@@ -15,31 +15,32 @@ import {
 } from "../../../errors/AppError";
 
 interface IPayload {
-  sub: string;
+  subject: string;
 }
 
 export async function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-
+  
   if (!authHeader) {
     throw new AppError("token missing", 401)
   }
 
   const [, token] = authHeader.split(" ");
+  const { subject: user_id } = verify(token, "56ebb4604b372d83bb869862c65c9fbd") as IPayload;
+   
+  const userRepository = new UserRepository();
 
+  const user = await userRepository.findById(user_id);
+  if (!user) {
+    throw new AppError("User not found", 401);
+  }
   try {
-    const { sub: userId } = verify(token, "56ebb4604b372d83bb869862c65c9fbd") as IPayload;
 
-    const userRepository = new UserRepository();
 
-    const user = await userRepository.findById(userId);
 
-    if (!user) {
-      throw new AppError("User not found", 401);
-    }
 
     req.user = {
-      id: userId
+      id: user_id
     };
 
     next();
