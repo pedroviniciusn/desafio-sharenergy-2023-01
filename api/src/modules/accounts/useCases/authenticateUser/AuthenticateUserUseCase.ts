@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import {
   sign,
 } from 'jsonwebtoken';
@@ -43,14 +45,14 @@ export class AuthenticateUserUseCase {
     username,
     password,
   }: IRequest): Promise<IResponse> {
-    const user = await this.userRepository.findByEmail(username);
+    const user = await this.userRepository.findByUsername(username);
 
     if (!user) {
       throw new AppError("Email or password incorrect", 401);
     }
 
     const passwordMatch = await compare(password, user.password);
-
+    console.log(passwordMatch)
     if (!passwordMatch) {
       throw new AppError("Email or password incorrect", 401);
     }

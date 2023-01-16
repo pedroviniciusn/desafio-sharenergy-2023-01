@@ -1,14 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "./build",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "lib": [
+        "es5",
+        "es6"
+    ],
     "baseUrl": "./src",
     "paths": {
       "@modules/*": [
@@ -27,6 +22,14 @@
       "middlewares/*"
       ]
     },
-  },
-  "lib": ["es6"]
+    "target": "ES5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
 }

@@ -1,3 +1,4 @@
+import { hash } from 'bcryptjs';
 import { ICreateUserDTO } from '../../dtos/ICreateUserDTO';
 import { IUser } from '../../dtos/IUser';
 import { User } from '../../infra/mongodb/models/User';
@@ -29,15 +30,15 @@ export class InMemoryUserRepository implements IUserRepository {
     this.users.push(user);
   }
 
-  async findById(id: string): Promise<IUser[]> {
-    return this.users.filter(user => user.id === id);
+  async findById(id: string): Promise<IUser> {
+    return this.users.find(user => user.id === id);
   }
 
-  async findByUsername(username: string): Promise<IUser[]> {
-    return this.users.filter(user => user.username === username);
+  async findByUsername(username: string): Promise<IUser> {
+    return this.users.find(user => user.username === username);
   }
 
-  async findByEmail(email: string): Promise<IUser[]> {
-    return this.users.filter(user => user.email === email);
+  async findByEmail(email: string): Promise<IUser> {
+    return this.users.find(user => user.email === email);
   }
 }
