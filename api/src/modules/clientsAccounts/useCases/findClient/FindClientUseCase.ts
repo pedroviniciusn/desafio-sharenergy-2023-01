@@ -1,3 +1,5 @@
+import { AppError } from '@shared/errors/AppError';
+import "reflect-metadata"
 import { inject, injectable } from 'tsyringe';
 import { IClientRepository } from '../../repositories/IClientRepository';
 
@@ -14,6 +16,10 @@ export class FindClientUseCase {
 
   async execute({ name }: IRequest) {
     const client = await this.clientRepository.findByName(name);
+
+    if (!client) {
+      throw new AppError("Client does not exists")
+    }
 
     return client;
   }
