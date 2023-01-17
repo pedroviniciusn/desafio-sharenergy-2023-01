@@ -1,4 +1,3 @@
-
 import { app } from '@shared/infra/http/app';
 import { connect } from '@shared/infra/mongodb';
 import { createAdmin } from '@shared/infra/mongodb/seed/admin';
