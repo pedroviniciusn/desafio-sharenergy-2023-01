@@ -1,5 +1,7 @@
 import "reflect-metadata";
 
+import * as dotenv from "dotenv";
+
 import express, {
   NextFunction,
   Request,
@@ -8,11 +10,11 @@ import express, {
 
 import { connect } from '../mongodb';
 
-import 'dotenv/config';
-
 import 'express-async-errors';
 
 import "../../container/index"
+
+import cors from "cors";
 
 import { createAdmin } from '../mongodb/seed/admin';
 
@@ -24,6 +26,10 @@ const app = express();
 
 app.use(express.json());
 app.use(router);
+
+dotenv.config()
+
+app.use(cors());
 
 try {
   connect();
