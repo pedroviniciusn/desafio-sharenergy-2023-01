@@ -7,11 +7,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
+import Alert from "@material-ui/lab/Alert";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { session } from '../../hooks/useApi';
+import { useNavigate } from 'react-router-dom';
+
+interface IResponse {
+  token: string;
+  message: string;
+}
 
 function Copyright() {
   return (
@@ -44,21 +51,42 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  root: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(3),
+    }
+  },
+  rootNone: {
+    display: "none"
+  }
 }));
 
 export default function SignIn() {
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [classAlert, setClassAlert] = useState(classes.rootNone);
+  const [errorLogin, setErrorLogin] = useState("");
+
+  const navigate = useNavigate();
 
   async function handleSession(event: FormEvent) {
     event.preventDefault();
 
-    const response = await session(username, password);
-    console.log(response)
+    
+    const response  = await session(username, password) as IResponse
+    
+    if (response.token) {
+      navigate("/home")
+    }
 
-    setUsername("");
-    setPassword("");
+    setErrorLogin(response.message);
+    setClassAlert(classes.root);
+  }
+
+  async function handleCloseButton() {
+    setClassAlert(classes.rootNone)
   }
 
   return (
@@ -114,6 +142,9 @@ export default function SignIn() {
       <Box mt={8}>
         <Copyright />
       </Box>
+      <div className={classAlert}>
+        <Alert severity="error" onClose={handleCloseButton}>{errorLogin}</Alert>
+      </div>
     </Container>
   );
 }

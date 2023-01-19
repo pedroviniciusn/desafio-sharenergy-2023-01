@@ -8,13 +8,31 @@ interface ISessionResponse {
   }
 }
 
-export async function session(username: string, password: string): Promise<void> {
-  const response = await apiBackend.post("/session", {
-    username: username,
-    password: password,
-  })
-  .then(response => console.log(response))
-  .catch(error => console.log(JSON.stringify(error)))
-
-  return response;
+interface ISessionResponseError {
+  message: string;
 }
+
+export async function session(username: string, password: string): Promise<ISessionResponse | ISessionResponseError> {
+  try {
+    const response = await apiBackend.post("/session", {
+      username: username,
+      password: password,
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response.data;
+  }
+}
+
+export async function listUsersByPage(page: string) {
+  try {
+    const response = await apiBackend.get(`/users/${page}`)
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response.data;
+  }
+} 

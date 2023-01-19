@@ -8,7 +8,7 @@ import { userRoutes } from './user.routes';
 const router = Router();
 
 router.use("/session", authenticateRoutes);
-router.use("/users", userRoutes);
+router.use("/users", ensureAuthenticated, ensureAdmin, userRoutes);
 router.use("/clients", ensureAuthenticated, ensureAdmin, clientRoutes);
 
 export { router };
