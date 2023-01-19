@@ -4,6 +4,7 @@ import { IUpdateClientDTO } from '../dtos/IUpdateClientDTO';
 
 export interface IClientRepository {
   create(data: ICreateClientDTO): Promise<void>;
+  find(): Promise<IClientDTO[]>
   findById(id: string): Promise<IClientDTO>;
   findByEmail(email: string): Promise<IClientDTO>;
   findByName(name: string): Promise<IClientDTO>;

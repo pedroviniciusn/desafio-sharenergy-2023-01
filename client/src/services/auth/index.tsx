@@ -1,5 +1,9 @@
 
-export const isAuthenticated = () => localStorage.getItem("TOKEN_KEY") !== null;
+export function isAuthenticated() {
+  if(! localStorage.getItem("TOKEN_KEY")) {
+    return false
+  }
+};
 
 export const getToken = () => localStorage.getItem("TOKEN_KEY");
 

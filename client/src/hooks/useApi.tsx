@@ -39,7 +39,7 @@ export async function listUsersByPage(page: string) {
     
     return response;
   } catch (error: any) {
-    return error.response.data;
+    return error.response;
   }
 } 
 

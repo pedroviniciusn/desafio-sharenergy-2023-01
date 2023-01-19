@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { logout, isAuthenticated } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,7 +23,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function ButtonAppBar() {
+  const navigate = useNavigate();
   const classes = useStyles();
+
+  const handleLogoutButton = () => {
+    logout()
+    
+    const session = isAuthenticated()
+
+    if (!session) {
+      navigate("/")
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -34,6 +46,9 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Sharenergy
           </Typography>
+          <Button variant="contained" color="primary" onClick={handleLogoutButton}>
+            Sair
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

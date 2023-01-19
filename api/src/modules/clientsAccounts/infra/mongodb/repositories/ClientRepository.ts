@@ -33,6 +33,10 @@ export class ClientRepository implements IClientRepository {
     )
   }  
 
+  async find(): Promise<IClientDTO[]> {
+    return await this.repository.find();
+  }
+
   async findById(id: string): Promise<IClientDTO> {
     return await this.repository.findOne({
       _id: id

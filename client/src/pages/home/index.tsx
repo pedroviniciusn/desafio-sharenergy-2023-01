@@ -14,6 +14,8 @@ import Button from "@material-ui/core/Button";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../services/auth';
 
 interface IUserProps {
   full_name?: string;
@@ -66,6 +68,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function Home() {
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
@@ -76,6 +79,10 @@ export default function Home() {
   useEffect(() => {
     async function getData() {
       const response = await listUsersByPage(page.toString());
+      if (response.status === 500 || response.status === 401) {
+        navigate("/")
+        logout();
+      }
       setUsers(response);
     }
 
@@ -148,9 +155,9 @@ export default function Home() {
             </CardContent>
           </Card>
         ) : (
-          users.map((user) => {
+          users.map((user, index) => {
             return (
-              <Card className={classes.card}>
+              <Card className={classes.card} key={index}>
                 <CardHeader
                   avatar={
                     <Avatar aria-label="recipe">
