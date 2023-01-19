@@ -13,6 +13,15 @@ interface ISessionResponseError {
   message: string;
 }
 
+
+interface IClientsProps {
+  name: string
+  email: string;
+  phone_number: number;
+  address: string;
+  cpf: number;
+}
+
 export async function session(username: string, password: string): Promise<ISessionResponse | ISessionResponseError> {
   try {
     const response = await apiBackend.post("/session", {
@@ -58,5 +67,65 @@ export async function findUser(data: string) {
     return response;
   } catch (error: any) {
     return error.response.data;
+  }
+}
+
+export async function getClients() {
+  try {
+    const token = getToken()
+    const response = await apiBackend.get("/clients", {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response;
+  }
+}
+
+export async function createClient({
+  name,
+  email,
+  address,
+  cpf,
+  phone_number,
+}: IClientsProps) {
+  try {
+    const token = getToken()
+    const response = await apiBackend.post("/clients", {
+      name: name,
+      email: email,
+      address: address,
+      cpf: cpf,
+      phone_number: phone_number,
+    }, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response;
+  }
+}
+
+export async function findClient(username: string) {
+  try {
+    const token = getToken()
+    const response = await apiBackend.get(`/clients/${username}`, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response;
   }
 }

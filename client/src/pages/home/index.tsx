@@ -12,10 +12,11 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
 
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../services/auth';
+
+import useStyles from './index.style';
 
 interface IUserProps {
   full_name?: string;
@@ -24,48 +25,6 @@ interface IUserProps {
   age?: number;
   picture?: string;
 }
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      "& > *": {
-        marginTop: theme.spacing(3),
-      },
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    containerInput: {
-      padding: "2px 4px",
-      display: "flex",
-      alignItems: "center",
-      width: 400,
-    },
-    input: {
-      marginLeft: theme.spacing(1),
-      flex: 1,
-    },
-    iconButton: {
-      padding: 10,
-    },
-    divider: {
-      height: 28,
-      margin: 4,
-    },
-    card: {
-      maxWidth: 330,
-      maxHeight: 140,
-      margin: 15,
-    },
-    cardContent: {
-      display: "grid",
-    },
-    main: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr 1fr",
-    },
-  })
-);
 
 export default function Home() {
   const navigate = useNavigate();
@@ -109,8 +68,8 @@ export default function Home() {
 
   return (
     <TemplateDefault>
-      <div className="dsfds">
-        <h2>Usuários</h2>
+      <div className={classes.mainHeader}>
+        <h2 className={classes.h2}>Usuários</h2>
         <Paper component="form" className={classes.containerInput}>
           <InputBase
             className={classes.input}
