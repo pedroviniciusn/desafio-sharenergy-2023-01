@@ -1,4 +1,5 @@
 import { apiBackend } from '../services/apiBackend';
+import { getToken } from '../services/auth';
 
 interface ISessionResponse {
   token: string;
@@ -28,7 +29,12 @@ export async function session(username: string, password: string): Promise<ISess
 
 export async function listUsersByPage(page: string) {
   try {
-    const response = await apiBackend.get(`/users/${page}`)
+    const token = getToken()
+    const response = await apiBackend.get(`/users/${page}`, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
     .then(response =>  response.data)
     
     return response;
@@ -36,3 +42,21 @@ export async function listUsersByPage(page: string) {
     return error.response.data;
   }
 } 
+
+export async function findUser(data: string) {
+  try {
+    const token = getToken()
+    const response = await apiBackend.post("/users", {
+      data: data
+    }, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response.data;
+  }
+}

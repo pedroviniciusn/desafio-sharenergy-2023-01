@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { session } from '../../hooks/useApi';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/auth';
 
 interface IResponse {
   token: string;
@@ -78,7 +79,10 @@ export default function SignIn() {
     const response  = await session(username, password) as IResponse
     
     if (response.token) {
-      navigate("/home")
+      navigate("/home");
+      login(response.token);
+      setUsername("");
+      setPassword("");
     }
 
     setErrorLogin(response.message);

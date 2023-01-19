@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
-import { listUsersByPage } from "../../hooks/useApi";
+import { findUser, listUsersByPage } from "../../hooks/useApi";
 import { TemplateDefault } from "../../TemplateDefault";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Avatar from "@material-ui/core/Avatar";
+import Paper from "@material-ui/core/Paper";
+import InputBase from "@material-ui/core/InputBase";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
+import Button from "@material-ui/core/Button";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Pagination from "@material-ui/lab/Pagination";
 
 interface IUserProps {
-  full_name: string;
-  username: string;
-  email: string;
-  age: number;
-  picture: string;
+  full_name?: string;
+  username?: string;
+  email?: string;
+  age?: number;
+  picture?: string;
 }
 
 const useStyles = makeStyles((theme) =>
@@ -27,18 +33,35 @@ const useStyles = makeStyles((theme) =>
       alignItems: "center",
       justifyContent: "center",
     },
+    containerInput: {
+      padding: "2px 4px",
+      display: "flex",
+      alignItems: "center",
+      width: 400,
+    },
+    input: {
+      marginLeft: theme.spacing(1),
+      flex: 1,
+    },
+    iconButton: {
+      padding: 10,
+    },
+    divider: {
+      height: 28,
+      margin: 4,
+    },
     card: {
       maxWidth: 330,
       maxHeight: 140,
-      margin: 15
+      margin: 15,
     },
     cardContent: {
       display: "grid",
     },
     main: {
       display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr 1fr"
-    }
+      gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    },
   })
 );
 
@@ -47,6 +70,9 @@ export default function Home() {
 
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<IUserProps[]>([]);
+  const [user, setUser] = useState<IUserProps>(Object);
+  const [data, setData] = useState<string>();
+
   useEffect(() => {
     async function getData() {
       const response = await listUsersByPage(page.toString());
@@ -60,37 +86,102 @@ export default function Home() {
     setPage(value);
   };
 
+  const handleButtonSearch = async (event: any) => {
+    event.preventDefault();
+
+    const response = await findUser(data as string);
+    
+    if (response.username) {
+      setUser(response);
+    }
+  };
+
+  const handleButtonClean = () => {
+    setUser({});
+  };
+
   return (
     <TemplateDefault>
-      <div>
+      <div className="dsfds">
         <h2>Usuários</h2>
+        <Paper component="form" className={classes.containerInput}>
+          <InputBase
+            className={classes.input}
+            placeholder="Procure um usuário"
+            inputProps={{ "aria-label": "search google maps" }}
+            onChange={(event) => setData(event.target.value)}
+          />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={handleButtonSearch}
+          >
+            <SearchIcon />
+          </IconButton>
+          <Divider className={classes.divider} orientation="vertical" />
+          <Button variant="contained" onClick={handleButtonClean}>
+            Limpar
+          </Button>
+        </Paper>
       </div>
 
       <main className={classes.main}>
-        {users.map((user) => {
-          return (
-            <Card className={classes.card}>
-              <CardHeader
-                avatar={
-                  <Avatar aria-label="recipe">
-                    <img src={user.picture} alt="picture" />
-                  </Avatar>
-                }
-                title={user.full_name}
-                subheader={user.email}
-              />
-              <CardContent className={classes.cardContent}>
-                <span><strong>username:</strong> {user.username}</span>
-                <span><strong>age:</strong> {user.age}</span>
-              </CardContent>
-            </Card>
-          )
-        })}
-
+        {user.username ? (
+          <Card className={classes.card}>
+            <CardHeader
+              avatar={
+                <Avatar aria-label="recipe">
+                  <img src={user.picture} alt="picture" />
+                </Avatar>
+              }
+              title={user.full_name}
+              subheader={user.email}
+            />
+            <CardContent className={classes.cardContent}>
+              <span>
+                <strong>username:</strong> {user.username}
+              </span>
+              <span>
+                <strong>age:</strong> {user.age}
+              </span>
+            </CardContent>
+          </Card>
+        ) : (
+          users.map((user) => {
+            return (
+              <Card className={classes.card}>
+                <CardHeader
+                  avatar={
+                    <Avatar aria-label="recipe">
+                      <img src={user.picture} alt="picture" />
+                    </Avatar>
+                  }
+                  title={user.full_name}
+                  subheader={user.email}
+                />
+                <CardContent className={classes.cardContent}>
+                  <span>
+                    <strong>username:</strong> {user.username}
+                  </span>
+                  <span>
+                    <strong>age:</strong> {user.age}
+                  </span>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </main>
-      <div className={classes.root}>
-        <Pagination count={3} page={page} onChange={handleChange} />
-      </div>
+      {user.username ? (
+        <div className={classes.root}>
+          <Pagination count={3} page={page} onChange={handleChange} disabled />
+        </div>
+      ) : (
+        <div className={classes.root}>
+          <Pagination count={3} page={page} onChange={handleChange} />
+        </div>
+      )}
     </TemplateDefault>
   );
 }
