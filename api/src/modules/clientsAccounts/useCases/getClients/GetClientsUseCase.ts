@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { IClientDTO } from '@modules/clientsAccounts/dtos/IClientDTO';
 import { IClientRepository } from '@modules/clientsAccounts/repositories/IClientRepository';
 import { AppError } from '@shared/errors/AppError';
