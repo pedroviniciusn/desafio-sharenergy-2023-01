@@ -4,7 +4,7 @@
 Rota para iniciar uma sessão dentro da aplicação com o username:  desafiosharenergy e o password: sh@r3n3rgy.
 Caso o username ou o password estejam incorretos, retornará o seguinte erro:
 
-    "Email or password incorrect"
+    "Username or password incorrect"
     
 Caso esteja tudo certo, retornará um token, juntamento com o username e o email do admin, exemplo:
 

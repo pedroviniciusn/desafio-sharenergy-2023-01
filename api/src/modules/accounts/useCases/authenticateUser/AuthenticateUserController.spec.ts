@@ -46,7 +46,7 @@ describe("Authenticate User Controller", () => {
     
     expect(response.body).toEqual(
       expect.objectContaining({
-        message: "Email or password incorrect",
+        message: "Username or password incorrect",
       })
     );
   });
