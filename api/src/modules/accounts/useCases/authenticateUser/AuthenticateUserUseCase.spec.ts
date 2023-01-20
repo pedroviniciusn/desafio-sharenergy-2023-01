@@ -43,6 +43,6 @@ describe("Authenticate User", () => {
         username: "user error",
         password: "error",
       })
-    ).rejects.toEqual(new AppError("Email or password incorrect", 401));
+    ).rejects.toEqual(new AppError("Email or password incorrect", 400));
   });
 });

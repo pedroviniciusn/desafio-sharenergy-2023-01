@@ -1,11 +1,11 @@
 import mongoose, { Connection, ConnectOptions } from 'mongoose';
 
 export async function connect(): Promise<Connection> {
-  
-  let url = process.env.NODE_ENV === "test" 
-  ? "mongodb://localhost:27017/tests"
-  : "mongodb://balta:e296cd9f@localhost:27017/admin";
 
+  let url = process.env.NODE_ENV === "test" 
+  ? process.env.MONGODB_URI_TESTS
+  : process.env.MONGODB_URI;
+  
   mongoose.connect(
     url,
     { useNewUrlParser: true, useUnifiedTopology: true } as ConnectOptions

@@ -9,6 +9,6 @@ const router = Router();
 
 router.use("/session", authenticateRoutes);
 router.use("/users", ensureAuthenticated, ensureAdmin, userRoutes);
-router.use("/clients", clientRoutes);
+router.use("/clients", ensureAuthenticated, ensureAdmin, clientRoutes);
 
 export { router };

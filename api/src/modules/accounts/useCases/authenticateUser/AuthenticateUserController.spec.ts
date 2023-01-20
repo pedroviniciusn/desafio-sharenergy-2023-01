@@ -42,7 +42,7 @@ describe("Authenticate User Controller", () => {
       password: "error",
     });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
     
     expect(response.body).toEqual(
       expect.objectContaining({
