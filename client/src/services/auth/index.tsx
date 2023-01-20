@@ -1,6 +1,6 @@
 
 export function isAuthenticated() {
-  if(! localStorage.getItem("TOKEN_KEY")) {
+  if(!localStorage.getItem("TOKEN_KEY")) {
     return false
   }
 };

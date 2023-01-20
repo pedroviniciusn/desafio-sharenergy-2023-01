@@ -80,7 +80,7 @@ export default function Customers() {
     }
 
     getData();
-  }, []);
+  }, [open]);
 
   const handleButtonSearch = async (event: any) => {
     event.preventDefault();
