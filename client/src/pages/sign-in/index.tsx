@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,10 +16,17 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/auth';
 
 import useStyles from './index.style';
+import { rememberMe } from '../../hooks/remenberMe';
 
 interface IResponse {
   token: string;
   message: string;
+}
+
+interface IResponseCheck {
+  usernameSaved?: string | null;
+  passwordSaved?: string | null;
+  checked?: boolean | null;
 }
 
 function Copyright() {
@@ -42,15 +49,52 @@ export default function SignIn() {
   const [classAlert, setClassAlert] = useState(classes.rootNone);
   const [errorLogin, setErrorLogin] = useState("");
 
+  const [checked, setChecked] = useState(false);
+  const [responseCheck, setReponseCheck] = useState<IResponseCheck>({
+    usernameSaved: "",
+    passwordSaved: "",
+    checked: false
+  })
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function check() {
+      const response = await rememberMe(
+        username,
+        password,
+        checked,
+      )
+      
+      if (response.check) {
+        setReponseCheck({
+          checked: response.check,
+          passwordSaved: response.passwordSaved,
+          usernameSaved: response.usernameSaved,
+        })
+      }
+    }
+
+    check()
+  }, [])
 
   async function handleSession(event: FormEvent) {
     event.preventDefault();
-
     
     const response  = await session(username, password) as IResponse
     
     if (response.token) {
+      if (checked) {
+        localStorage.setItem("USERNAME", username);
+        localStorage.setItem("PASSWORD", password);
+        localStorage.setItem("CHECKED", checked.toString());
+      } else if (!checked) {
+          if (responseCheck.checked) {
+            localStorage.removeItem("USERNAME");
+            localStorage.removeItem("PASSWORD");
+            localStorage.removeItem("CHECKED");
+          }
+      }
       navigate("/home");
       login(response.token);
       setUsername("");
@@ -65,6 +109,10 @@ export default function SignIn() {
     setClassAlert(classes.rootNone)
   }
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -75,7 +123,8 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={handleSession}>
+        { responseCheck ? (
+          <form className={classes.form} onSubmit={handleSession}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -86,6 +135,7 @@ export default function SignIn() {
             name="username"
             autoComplete="usersname"
             autoFocus
+            value={responseCheck.usernameSaved}
             onChange={event => setUsername(event.target.value)}
           />
           <TextField
@@ -98,10 +148,14 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={responseCheck.passwordSaved}
             onChange={event => setPassword(event.target.value)}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox value="remember" 
+            color="primary" 
+            checked={responseCheck.checked as boolean | undefined}
+            onChange={handleChange} />}
             label="Remember me"
           />
           <Button
@@ -114,6 +168,48 @@ export default function SignIn() {
             Sign In
           </Button>
         </form>
+        ) : <form className={classes.form} onSubmit={handleSession}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="Username"
+          name="username"
+          autoComplete="usersname"
+          autoFocus
+          onChange={event => setUsername(event.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          onChange={event => setPassword(event.target.value)}
+        />
+        <FormControlLabel
+          control={<Checkbox value="remember" 
+          color="primary" 
+          checked={checked}
+          onChange={handleChange} />}
+          label="Remember me"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
+          Sign In
+        </Button>
+      </form> }
       </div>
       <Box mt={8}>
         <Copyright />

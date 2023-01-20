@@ -1,13 +1,24 @@
 import { TemplateDefault } from "../../TemplateDefault";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useStyles from './index.style';
+import { isAuthenticated } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function HttpCat() {
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [statusCode, setStatusCode] = useState("");
+
+  useEffect(() => {
+    const response = isAuthenticated() 
+
+    if (response == false) {
+      navigate("/")
+    }
+  },[navigate]);
 
   return (
     <TemplateDefault>

@@ -16,10 +16,10 @@ export default function RandomDog() {
   useEffect(() => {
     const response = isAuthenticated() 
 
-    if (response == false) {
+    if (response === false) {
       navigate("/")
     }
-  }, [image]);
+  }, [image, navigate]);
 
 
   const handleClickButton = async () => {
