@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) =>
     },
     card: {
       maxWidth: 330,
-      maxHeight: 140,
+      maxHeight: 500,
       margin: 15,
     },
     cardContent: {
@@ -47,6 +47,12 @@ const useStyles = makeStyles((theme) =>
       alignItems: "center",
       justifyContent: "space-between",
     },
+    editAndDelete: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "0 20px 10px"  
+    }
   })
 );
 

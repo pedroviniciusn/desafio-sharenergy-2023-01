@@ -44,8 +44,8 @@ function Copyright() {
 
 export default function SignIn() {
   const classes = useStyles();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string | undefined>("");
+  const [password, setPassword] = useState<string | undefined>("");
   const [classAlert, setClassAlert] = useState(classes.rootNone);
   const [errorLogin, setErrorLogin] = useState("");
 
@@ -61,8 +61,8 @@ export default function SignIn() {
   useEffect(() => {
     async function check() {
       const response = await rememberMe(
-        username,
-        password,
+        username as string,
+        password as string,
         checked,
       )
       
@@ -72,7 +72,12 @@ export default function SignIn() {
           passwordSaved: response.passwordSaved,
           usernameSaved: response.usernameSaved,
         })
+        
+      setUsername(responseCheck.usernameSaved as string);
+      setPassword(responseCheck.passwordSaved as string)
+      console.log(responseCheck)
       }
+
     }
 
     check()
@@ -81,12 +86,12 @@ export default function SignIn() {
   async function handleSession(event: FormEvent) {
     event.preventDefault();
     
-    const response  = await session(username, password) as IResponse
+    const response  = await session(username as string, password as string) as IResponse
     
     if (response.token) {
       if (checked) {
-        localStorage.setItem("USERNAME", username);
-        localStorage.setItem("PASSWORD", password);
+        localStorage.setItem("USERNAME", username as string);
+        localStorage.setItem("PASSWORD", password as string);
         localStorage.setItem("CHECKED", checked.toString());
       } else if (!checked) {
           if (responseCheck.checked) {
@@ -123,7 +128,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        { responseCheck ? (
+        { responseCheck.checked ? (
           <form className={classes.form} onSubmit={handleSession}>
           <TextField
             variant="outlined"
@@ -133,9 +138,8 @@ export default function SignIn() {
             id="username"
             label="Username"
             name="username"
-            autoComplete="usersname"
             autoFocus
-            value={responseCheck.usernameSaved}
+            value={username}
             onChange={event => setUsername(event.target.value)}
           />
           <TextField
@@ -147,14 +151,13 @@ export default function SignIn() {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
-            value={responseCheck.passwordSaved}
+            value={password}
             onChange={event => setPassword(event.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" 
             color="primary" 
-            checked={responseCheck.checked as boolean | undefined}
+            checked={checked}
             onChange={handleChange} />}
             label="Remember me"
           />

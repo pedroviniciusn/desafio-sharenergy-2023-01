@@ -13,12 +13,19 @@ import SearchIcon from "@material-ui/icons/Search";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
-import { createClient, findClient, getClients } from "../../hooks/useApi";
+import {
+  createClient,
+  deleteClient,
+  findClient,
+  getClients,
+} from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../services/auth";
 
-import useStyles from './index.style';
+import useStyles from "./index.style";
 
 interface IClientsProps {
   _id?: string;
@@ -50,6 +57,17 @@ export default function Customers() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  async function getData() {
+    const response = await getClients();
+    if (response.status === 500 || response.status === 401) {
+      navigate("/");
+      logout();
+    } else if (response.status === 400) {
+      setResponseError(response.data.message);
+    }
+    setClients(response);
+  }
+
   const handleClickCreate = async () => {
     const response = await createClient({
       name,
@@ -64,29 +82,19 @@ export default function Customers() {
       logout();
     }
 
-    handleClose()
+    handleClose();
+    await getData();
   };
 
   useEffect(() => {
-    async function getData() {
-      const response = await getClients();
-      if (response.status === 500 || response.status === 401) {
-        navigate("/");
-        logout();
-      } else if (response.status === 400) {
-        setResponseError(response.data.message);
-      }
-      setClients(response);
-    }
-
     getData();
-  }, [open]);
+  }, []);
 
   const handleButtonSearch = async (event: any) => {
     event.preventDefault();
 
     const response = await findClient(username as string);
-    
+
     if (response.name) {
       setClient(response);
     }
@@ -96,6 +104,17 @@ export default function Customers() {
     setClient({});
   };
 
+  const handleRemoveClient = async (id: any) => {
+    const response = await deleteClient({ id: id.target.id });
+    console.log(id.target.id);
+
+    if (response.status === 500 || response.status === 401) {
+      navigate("/");
+      logout();
+    }
+
+    await getData();
+  };
 
   return (
     <TemplateDefault>
@@ -182,14 +201,16 @@ export default function Customers() {
             <SearchIcon />
           </IconButton>
           <Divider className={classes.divider} orientation="vertical" />
-          <Button variant="contained" onClick={handleButtonClean}>Limpar</Button>
+          <Button variant="contained" onClick={handleButtonClean}>
+            Limpar
+          </Button>
         </Paper>
       </div>
       <main>
         {responseError ? (
           <h1>{responseError}</h1>
         ) : client.name ? (
-          <Card className={classes.card}>
+          <Card className={classes.card} id={client._id}>
             <CardHeader title={client.name} subheader={client.email} />
             <CardContent className={classes.cardContent}>
               <span>
@@ -202,23 +223,31 @@ export default function Customers() {
                 <strong>Telefone:</strong> {client.phone_number}
               </span>
             </CardContent>
+            <div className={classes.editAndDelete}>
+              <DeleteIcon id={client._id} onClick={handleRemoveClient} />
+              <EditIcon />
+            </div>
           </Card>
         ) : (
-          clients.map((client) => {
+          clients.map((client, index) => {
             return (
-              <Card className={classes.card} key={client._id}>
+              <Card className={classes.card} key={index}>
                 <CardHeader title={client.name} subheader={client.email} />
                 <CardContent className={classes.cardContent}>
-                  <span>
+                  <span style={{ padding: "0 10px 10px" }}>
                     <strong>Endereço:</strong> {client.address}
                   </span>
-                  <span>
+                  <span style={{ padding: "10px" }}>
                     <strong>CPF:</strong> {client.cpf}
                   </span>
-                  <span>
+                  <span style={{ padding: "10px" }}>
                     <strong>Telefone:</strong> {client.phone_number}
                   </span>
                 </CardContent>
+                <div className={classes.editAndDelete}>
+                  <DeleteIcon id={client._id} onClick={handleRemoveClient} />
+                  <EditIcon />
+                </div>
               </Card>
             );
           })

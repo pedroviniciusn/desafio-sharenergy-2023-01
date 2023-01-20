@@ -13,13 +13,16 @@ interface ISessionResponseError {
   message: string;
 }
 
-
 interface IClientsProps {
   name: string
   email: string;
   phone_number: number;
   address: string;
   cpf: number;
+}
+
+interface IDeleteProps {
+  id: string;
 }
 
 export async function session(username: string, password: string): Promise<ISessionResponse | ISessionResponseError> {
@@ -118,6 +121,22 @@ export async function findClient(username: string) {
   try {
     const token = getToken()
     const response = await apiBackend.get(`/clients/${username}`, {
+      headers: {
+        'Authorization': `Basic ${token}` 
+      }
+    })
+    .then(response =>  response.data)
+    
+    return response;
+  } catch (error: any) {
+    return error.response;
+  }
+}
+
+export async function deleteClient({id}: IDeleteProps) {
+  try {
+    const token = getToken()
+    const response = await apiBackend.delete(`/clients/${id}`, {
       headers: {
         'Authorization': `Basic ${token}` 
       }
